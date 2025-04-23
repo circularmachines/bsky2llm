@@ -1,0 +1,324 @@
+{
+  "thread": {
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "post": {
+      "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l",
+      "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+      "author": {
+        "did": "did:plc:evocjxmi5cps2thb4ya5jcji",
+        "handle": "laagrrluv.bsky.social",
+        "displayName": "Johan Lagerl\u00f6f",
+        "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:evocjxmi5cps2thb4ya5jcji/bafkreihmqwucvdq3d2fof6mtjpk2zf62jklprevvevdysm5z2jia3srstu@jpeg",
+        "labels": [],
+        "createdAt": "2024-11-15T13:19:11.824Z"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "createdAt": "2025-03-24T18:08:35.163Z",
+        "embed": {
+          "$type": "app.bsky.embed.video",
+          "aspectRatio": {
+            "height": 1504,
+            "width": 1128
+          },
+          "video": {
+            "$type": "blob",
+            "ref": {
+              "$link": "bafkreiagy43pu4w2hpjlwdee7ktezksndyxogxv4v7mp2uzpfclrjsm3fe"
+            },
+            "mimeType": "video/mp4",
+            "size": 2148948
+          }
+        },
+        "facets": [],
+        "langs": [
+          "sv"
+        ],
+        "tags": [
+          "flashes-app-ln3348nvl89"
+        ],
+        "text": ""
+      },
+      "embed": {
+        "$type": "app.bsky.embed.video#view",
+        "cid": "bafkreiagy43pu4w2hpjlwdee7ktezksndyxogxv4v7mp2uzpfclrjsm3fe",
+        "playlist": "https://video.bsky.app/watch/did%3Aplc%3Aevocjxmi5cps2thb4ya5jcji/bafkreiagy43pu4w2hpjlwdee7ktezksndyxogxv4v7mp2uzpfclrjsm3fe/playlist.m3u8",
+        "thumbnail": "https://video.bsky.app/watch/did%3Aplc%3Aevocjxmi5cps2thb4ya5jcji/bafkreiagy43pu4w2hpjlwdee7ktezksndyxogxv4v7mp2uzpfclrjsm3fe/thumbnail.jpg",
+        "aspectRatio": {
+          "height": 1504,
+          "width": 1128
+        }
+      },
+      "replyCount": 3,
+      "repostCount": 0,
+      "likeCount": 0,
+      "quoteCount": 0,
+      "indexedAt": "2025-03-24T18:08:36.849Z",
+      "labels": []
+    },
+    "replies": [
+      {
+        "$type": "app.bsky.feed.defs#threadViewPost",
+        "post": {
+          "uri": "at://did:plc:kdnkzvtg6nugup477ev22xfa/app.bsky.feed.post/3ll5ek3ysa22m",
+          "cid": "bafyreihypj5d3lihsbiv47tc5yomxihprggltvrcsv2drx4p7hcwdd3z7i",
+          "author": {
+            "did": "did:plc:kdnkzvtg6nugup477ev22xfa",
+            "handle": "sharedinventory.bsky.social",
+            "displayName": "",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:kdnkzvtg6nugup477ev22xfa/bafkreibbqwstevkvb2jiq2mqqxsk7bpjn6capsyvyxznykj2equlo2hz4i@jpeg",
+            "labels": [],
+            "createdAt": "2025-03-23T08:17:49.243Z"
+          },
+          "record": {
+            "$type": "app.bsky.feed.post",
+            "createdAt": "2025-03-24T18:18:05.069555+00:00",
+            "langs": [
+              "en"
+            ],
+            "reply": {
+              "$type": "app.bsky.feed.post#replyRef",
+              "parent": {
+                "$type": "com.atproto.repo.strongRef",
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              },
+              "root": {
+                "$type": "com.atproto.repo.strongRef",
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              }
+            },
+            "text": "\ud83c\udfac Video Analysis \ud83c\udfac\n\nDuration: 0:07\nSegments: 2\nWords: 19\n\nTranscript: Okej, h\u00e4r har vi d\u00e5 en skruvmejsel som \u00e4r r\u00f6d och svart. Det \u00e4r n\u00e5gon slags vanlig s\u00e5n sp\u00e5rskruvmejsel."
+          },
+          "replyCount": 0,
+          "repostCount": 0,
+          "likeCount": 0,
+          "quoteCount": 0,
+          "indexedAt": "2025-03-24T18:18:05.752Z",
+          "labels": []
+        },
+        "replies": [],
+        "threadContext": {}
+      },
+      {
+        "$type": "app.bsky.feed.defs#threadViewPost",
+        "post": {
+          "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmi4g7yf522c",
+          "cid": "bafyreiczdqjuoq6j6xdbdcprl3nhetqxbxddmlugk4ihf3rhh7kgbr34zi",
+          "author": {
+            "did": "did:plc:evocjxmi5cps2thb4ya5jcji",
+            "handle": "laagrrluv.bsky.social",
+            "displayName": "Johan Lagerl\u00f6f",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:evocjxmi5cps2thb4ya5jcji/bafkreihmqwucvdq3d2fof6mtjpk2zf62jklprevvevdysm5z2jia3srstu@jpeg",
+            "labels": [],
+            "createdAt": "2024-11-15T13:19:11.824Z"
+          },
+          "record": {
+            "$type": "app.bsky.feed.post",
+            "createdAt": "2025-04-10T18:17:14.363Z",
+            "embed": {
+              "$type": "app.bsky.embed.record",
+              "record": {
+                "cid": "bafyreid7nbcfgo4s43b2vl24q6os4eax4e355ettq334pgctasuloujfsi",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmcpqmyyg22v"
+              }
+            },
+            "facets": [
+              {
+                "features": [
+                  {
+                    "$type": "app.bsky.richtext.facet#link",
+                    "uri": "https://bsky.app/profile/laagrrluv.bsky.social/post/3lmcpqmyyg22v"
+                  }
+                ],
+                "index": {
+                  "byteEnd": 24,
+                  "byteStart": 0
+                }
+              }
+            ],
+            "langs": [
+              "en"
+            ],
+            "reply": {
+              "parent": {
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              },
+              "root": {
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              }
+            },
+            "text": "bsky.app/profile/laag..."
+          },
+          "embed": {
+            "$type": "app.bsky.embed.record#view",
+            "record": {
+              "$type": "app.bsky.embed.record#viewRecord",
+              "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmcpqmyyg22v",
+              "cid": "bafyreid7nbcfgo4s43b2vl24q6os4eax4e355ettq334pgctasuloujfsi",
+              "author": {
+                "did": "did:plc:evocjxmi5cps2thb4ya5jcji",
+                "handle": "laagrrluv.bsky.social",
+                "displayName": "Johan Lagerl\u00f6f",
+                "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:evocjxmi5cps2thb4ya5jcji/bafkreihmqwucvdq3d2fof6mtjpk2zf62jklprevvevdysm5z2jia3srstu@jpeg",
+                "labels": [],
+                "createdAt": "2024-11-15T13:19:11.824Z"
+              },
+              "value": {
+                "$type": "app.bsky.feed.post",
+                "createdAt": "2025-04-08T14:47:06.222Z",
+                "embed": {
+                  "$type": "app.bsky.embed.video",
+                  "aspectRatio": {
+                    "height": 1280,
+                    "width": 720
+                  },
+                  "video": {
+                    "$type": "blob",
+                    "ref": {
+                      "$link": "bafkreibyn3a4fxa7sgxtena6jgigj7vrxyzn55hsuede5judssei5fmpqq"
+                    },
+                    "mimeType": "video/mp4",
+                    "size": 6189693
+                  }
+                },
+                "langs": [
+                  "sv"
+                ],
+                "text": ""
+              },
+              "labels": [],
+              "likeCount": 0,
+              "replyCount": 1,
+              "repostCount": 0,
+              "quoteCount": 1,
+              "indexedAt": "2025-04-08T14:47:08.087Z",
+              "embeds": [
+                {
+                  "$type": "app.bsky.embed.video#view",
+                  "cid": "bafkreibyn3a4fxa7sgxtena6jgigj7vrxyzn55hsuede5judssei5fmpqq",
+                  "playlist": "https://video.bsky.app/watch/did%3Aplc%3Aevocjxmi5cps2thb4ya5jcji/bafkreibyn3a4fxa7sgxtena6jgigj7vrxyzn55hsuede5judssei5fmpqq/playlist.m3u8",
+                  "thumbnail": "https://video.bsky.app/watch/did%3Aplc%3Aevocjxmi5cps2thb4ya5jcji/bafkreibyn3a4fxa7sgxtena6jgigj7vrxyzn55hsuede5judssei5fmpqq/thumbnail.jpg",
+                  "aspectRatio": {
+                    "height": 1280,
+                    "width": 720
+                  }
+                }
+              ]
+            }
+          },
+          "replyCount": 0,
+          "repostCount": 0,
+          "likeCount": 0,
+          "quoteCount": 0,
+          "indexedAt": "2025-04-10T18:17:14.782Z",
+          "labels": []
+        },
+        "replies": [],
+        "threadContext": {}
+      },
+      {
+        "$type": "app.bsky.feed.defs#threadViewPost",
+        "post": {
+          "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmcoe3ovku22",
+          "cid": "bafyreidxatnbrz37ptcgab3fefhsdxrquwml47hchl5l6sr22qycxwbaiq",
+          "author": {
+            "did": "did:plc:evocjxmi5cps2thb4ya5jcji",
+            "handle": "laagrrluv.bsky.social",
+            "displayName": "Johan Lagerl\u00f6f",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:evocjxmi5cps2thb4ya5jcji/bafkreihmqwucvdq3d2fof6mtjpk2zf62jklprevvevdysm5z2jia3srstu@jpeg",
+            "labels": [],
+            "createdAt": "2024-11-15T13:19:11.824Z"
+          },
+          "record": {
+            "$type": "app.bsky.feed.post",
+            "createdAt": "2025-04-08T14:22:11.331Z",
+            "facets": [
+              {
+                "$type": "app.bsky.richtext.facet",
+                "features": [
+                  {
+                    "$type": "app.bsky.richtext.facet#mention",
+                    "did": "did:plc:kdnkzvtg6nugup477ev22xfa"
+                  }
+                ],
+                "index": {
+                  "byteEnd": 28,
+                  "byteStart": 0
+                }
+              }
+            ],
+            "langs": [
+              "sv"
+            ],
+            "reply": {
+              "parent": {
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              },
+              "root": {
+                "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+              }
+            },
+            "text": "@sharedinventory.bsky.social"
+          },
+          "replyCount": 2,
+          "repostCount": 0,
+          "likeCount": 0,
+          "quoteCount": 0,
+          "indexedAt": "2025-04-08T14:22:11.889Z",
+          "labels": []
+        },
+        "replies": [
+          {
+            "$type": "app.bsky.feed.defs#threadViewPost",
+            "post": {
+              "uri": "at://did:plc:kdnkzvtg6nugup477ev22xfa/app.bsky.feed.post/3lmjaz2x63c2c",
+              "cid": "bafyreiaorqwayzqqtankjk6pdvdpd25bbw4izymcsn27jetxj7ysqjroca",
+              "author": {
+                "did": "did:plc:kdnkzvtg6nugup477ev22xfa",
+                "handle": "sharedinventory.bsky.social",
+                "displayName": "",
+                "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:kdnkzvtg6nugup477ev22xfa/bafkreibbqwstevkvb2jiq2mqqxsk7bpjn6capsyvyxznykj2equlo2hz4i@jpeg",
+                "labels": [],
+                "createdAt": "2025-03-23T08:17:49.243Z"
+              },
+              "record": {
+                "$type": "app.bsky.feed.post",
+                "createdAt": "2025-04-11T05:12:01.320Z",
+                "langs": [
+                  "en"
+                ],
+                "reply": {
+                  "parent": {
+                    "cid": "bafyreidxatnbrz37ptcgab3fefhsdxrquwml47hchl5l6sr22qycxwbaiq",
+                    "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmcoe3ovku22"
+                  },
+                  "root": {
+                    "cid": "bafyreiessqubt37lhdtg6jz56whaigwr3prket65zcpfts53enfy2cqaqa",
+                    "uri": "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+                  }
+                },
+                "text": "Kan jag se den h\u00e4r?"
+              },
+              "replyCount": 0,
+              "repostCount": 0,
+              "likeCount": 0,
+              "quoteCount": 0,
+              "indexedAt": "2025-04-11T05:12:03.277Z",
+              "labels": []
+            },
+            "replies": [],
+            "threadContext": {}
+          }
+        ],
+        "threadContext": {}
+      }
+    ],
+    "threadContext": {}
+  }
+}
