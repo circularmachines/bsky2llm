@@ -4,7 +4,7 @@ This document outlines the coding standards and architectural guidelines for the
 
 ## Project Organization
 
-- All main functionality should be in the `src/` folder
+- All main functionality should be in the `src/bsky2llm/` folder
 - Keep files modular with specific responsibilities
 - Follow the consistent file structure pattern
 
@@ -12,7 +12,7 @@ This document outlines the coding standards and architectural guidelines for the
 
 ### File Structure
 
-Each source file in `src/` should follow this format:
+Each source file in `src/bsky2llm/` should follow this format:
 
 1. **IMPORTS**:
    - Import necessary libraries (os, requests, logging, etc.)

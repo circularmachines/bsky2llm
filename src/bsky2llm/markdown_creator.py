@@ -9,15 +9,17 @@ import json
 import os
 from typing import Dict, Any, Optional, List, Union, Callable
 
-# Import video processing functionality
+# Import video and image processing functionality
 try:
     # When used as a package
     from .process_video import has_video, video_to_markdown
+    from .process_image import has_images, image_to_markdown
 except ImportError:
     # When run directly as a script
     import sys
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from bsky2llm.process_video import has_video, video_to_markdown
+    from bsky2llm.process_image import has_images, image_to_markdown
 
 def setup_logging(debug=False):
     """Configure logging based on debug mode"""
@@ -118,8 +120,8 @@ def _process_thread_node(
     max_depth: int = -1,
     filter_fn: Optional[Callable[[Dict[str, Any]], bool]] = None,
     include_indices: bool = False,
-    process_videos: bool = False,
-    output_dir: str = "vault/images",
+    process_media: bool = False,
+    output_dir: str = "vault/media",
     current_index: List[int] = None,
     debug: bool = False
 ) -> List[str]:
@@ -134,7 +136,7 @@ def _process_thread_node(
         max_depth: Maximum depth to process (-1 for unlimited)
         filter_fn: Optional function to filter posts
         include_indices: Whether to include hierarchical indices
-        process_videos: Whether to process videos in posts
+        process_media: Whether to process media (videos, images) in posts
         output_dir: Directory to save extracted files
         current_index: Current index path (e.g., [1, 2, 3])
         debug: Enable verbose debug output
@@ -175,12 +177,18 @@ def _process_thread_node(
         post_md = format_str.format(**post_data)
         results.append(post_md)
         
-        # Process video if requested and available
-        if process_videos:
-            # Let process_video module handle video detection and processing
+        # Process media if requested
+        if process_media:
+            # Process video if present
             video_md = video_to_markdown(post_obj, output_dir=output_dir, debug=debug)
             if video_md:
                 results.append(video_md)
+                results.append("\n")
+            
+            # Process images if present
+            image_md = image_to_markdown(post_obj, output_dir=output_dir, debug=debug)
+            if image_md:
+                results.append(image_md)
                 results.append("\n")
             
     except KeyError as e:
@@ -190,11 +198,16 @@ def _process_thread_node(
         post_md = f"{index_prefix}**{post_data.get('displayName', '')}** (@{post_data.get('handle', '')}):\n{post_data.get('text', '')}\n\n"
         results.append(post_md)
         
-        # Add video in fallback mode too
-        if process_videos:
+        # Add media in fallback mode too
+        if process_media:
             video_md = video_to_markdown(post_obj, output_dir=output_dir, debug=debug)
             if video_md:
                 results.append(video_md)
+                results.append("\n")
+                
+            image_md = image_to_markdown(post_obj, output_dir=output_dir, debug=debug)
+            if image_md:
+                results.append(image_md)
                 results.append("\n")
             
     except Exception as e:
@@ -224,7 +237,7 @@ def _process_thread_node(
                     max_depth,
                     filter_fn,
                     include_indices,
-                    process_videos,
+                    process_media,
                     output_dir,
                     reply_index,
                     debug
@@ -240,8 +253,8 @@ def thread_to_markdown(
     max_depth: int = -1,
     filter_fn: Optional[Callable[[Dict[str, Any]], bool]] = None,
     include_indices: bool = False,
-    process_videos: bool = False,
-    output_dir: str = "vault/images",
+    process_media: bool = False,
+    output_dir: str = "vault/media",
     debug: bool = False
 ) -> str:
     """
@@ -255,8 +268,8 @@ def thread_to_markdown(
         max_depth (int): Maximum depth of replies to include (-1 for all)
         filter_fn (Callable): Optional function to filter posts (return True to include)
         include_indices (bool): Whether to include hierarchical indices (like 1.2.3)
-        process_videos (bool): Whether to process and include video content
-        output_dir (str): Directory to save extracted files from videos
+        process_media (bool): Whether to process and include media content (videos, images)
+        output_dir (str): Directory to save extracted files from media
         debug (bool): Enable verbose debug output
         
     Returns:
@@ -265,9 +278,14 @@ def thread_to_markdown(
     setup_logging(debug)
     logging.debug(f"Converting thread to markdown with format: {format_str}")
     
-    # Create output directory if it doesn't exist and we're processing videos
-    if process_videos and output_dir:
+    # Create output directory if it doesn't exist and we're processing media
+    if process_media and output_dir:
+        # Create main media directory
         os.makedirs(output_dir, exist_ok=True)
+        # Create subdirectories for different media types
+        os.makedirs(os.path.join(output_dir, "images"), exist_ok=True)
+        os.makedirs(os.path.join(output_dir, "frames"), exist_ok=True)
+        os.makedirs(os.path.join(output_dir, "audio"), exist_ok=True)
     
     # Start processing from thread root
     thread_node = thread_data.get("thread", {})
@@ -279,7 +297,7 @@ def thread_to_markdown(
         max_depth,
         filter_fn,
         include_indices,
-        process_videos,
+        process_media,
         output_dir,
         None,
         debug
@@ -319,7 +337,7 @@ def main():
                 format_str=format_str,
                 include_replies=True,
                 include_indices=True,
-                process_videos=True,  # Enable video processing
+                process_media=True,  # Enable media processing
                 debug=True
             )
             
@@ -340,7 +358,7 @@ def main():
             format_str="**{displayName}** (@{handle}):\n{text}\n\n",
             include_replies=True,
             include_indices=False,
-            process_videos=True,  # Enable video processing
+            process_media=True,  # Enable media processing
             debug=True
         )
         

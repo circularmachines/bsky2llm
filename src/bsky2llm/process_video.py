@@ -558,7 +558,7 @@ def video_to_markdown(post_data: Dict[str, Any], output_dir: str = "output", max
                         frame_path = frame_info.get("path")
                         if frame_path:
                             frame_filename = os.path.basename(frame_path)
-                            markdown_lines.append(f"![Frame at {frame_info.get('time', 0):.2f}s](images/{frame_filename})\n")
+                            markdown_lines.append(f"![Frame at {frame_info.get('time', 0):.2f}s](media/frames/{frame_filename})\n") #ToDo proper path for frames
                 
                 markdown_lines.append("\n")
     # If we don't have segment-specific frames, fall back to showing all frames then transcript

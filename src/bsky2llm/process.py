@@ -38,7 +38,7 @@ def process_post(
     include_replies: bool = True,
     max_depth: int = -1,
     include_indices: bool = False,
-    process_videos: bool = True,
+    process_media: bool = True,
     output_dir: str = "output",
     output_filename: Optional[str] = None,
     debug: bool = False
@@ -53,7 +53,7 @@ def process_post(
         include_replies: Whether to include replies in the output
         max_depth: Maximum depth of replies to include (-1 for all)
         include_indices: Whether to include hierarchical indices
-        process_videos: Whether to process videos in posts
+        process_media: Whether to process media (videos, images) in posts
         output_dir: Directory to save extracted files and markdown
         output_filename: Custom filename for the output markdown file (without extension)
         debug: Enable verbose debug output
@@ -64,8 +64,8 @@ def process_post(
     setup_logging(debug)
     
     # Create output directory if it doesn't exist
-    images_dir = os.path.join(output_dir, "images")
-    os.makedirs(images_dir, exist_ok=True)
+    media_dir = os.path.join(output_dir, "media")
+    os.makedirs(media_dir, exist_ok=True)
     
     # Step 1: Get the raw thread data
     logging.info(f"Fetching raw thread data for: {post_uri}")
@@ -82,8 +82,12 @@ def process_post(
     except Exception:
         post_id = "thread"
     
+    # Create output directory if it doesn't exist
+    raw_dir = os.path.join(output_dir, "thread_data")
+    os.makedirs(raw_dir, exist_ok=True)
+
     # Save raw thread data
-    raw_data_path = os.path.join(output_dir, f"raw_thread_{post_id}.json")
+    raw_data_path = os.path.join(raw_dir, f"raw_thread_{post_id}.json")
     try:
         with open(raw_data_path, 'w', encoding='utf-8') as f:
             json.dump(raw_thread_data, f, indent=2)
@@ -99,8 +103,8 @@ def process_post(
         include_replies=include_replies,
         max_depth=max_depth,
         include_indices=include_indices,
-        process_videos=process_videos,
-        output_dir=images_dir,
+        process_media=process_media,
+        output_dir=media_dir,
         debug=debug
     )
     
@@ -112,8 +116,8 @@ def process_post(
     if output_filename:
         md_filename = f"{output_filename}.md"
     else:
-        prefix = "indexed_" if include_indices else ""
-        md_filename = f"{prefix}thread_{post_id}.md"
+        #prefix = "indexed_" if include_indices else ""
+        md_filename = f"thread_{post_id}.md"
     
     # Save markdown
     md_path = os.path.join(output_dir, md_filename)
@@ -142,7 +146,7 @@ def main():
         format_str="[{index}] **{displayName}** (@{handle}):\n{text}\n\n",
         include_replies=True,
         include_indices=True,
-        process_videos=True,
+        process_media=True,
         output_dir="output",
         debug=True
     )
