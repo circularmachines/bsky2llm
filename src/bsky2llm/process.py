@@ -15,12 +15,14 @@ try:
     # When used as a package
     from .get_raw_thread import get_raw_thread
     from .markdown_creator import thread_to_markdown
+    from .url_converter import convert_url_to_uri
 except ImportError:
     # When run directly as a script
     import sys
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from bsky2llm.get_raw_thread import get_raw_thread
     from bsky2llm.markdown_creator import thread_to_markdown
+    from bsky2llm.url_converter import convert_url_to_uri
 
 def setup_logging(debug=False):
     """Configure logging based on debug mode"""
@@ -44,10 +46,10 @@ def process_post(
     debug: bool = False
 ) -> Optional[str]:
     """
-    Process a Bluesky post from URI to formatted markdown
+    Process a Bluesky post from URI or URL to formatted markdown
     
     Args:
-        post_uri: The Bluesky post URI to process
+        post_uri: The Bluesky post URI or URL to process
         get_root: If True, get the root post of the thread
         format_str: Format string template for markdown conversion
         include_replies: Whether to include replies in the output
@@ -62,6 +64,16 @@ def process_post(
         Path to the generated markdown file or None if processing failed
     """
     setup_logging(debug)
+    
+    # Convert URL to URI if needed
+    if post_uri.startswith('http'):
+        logging.info(f"Converting URL to URI: {post_uri}")
+        uri = convert_url_to_uri(post_uri, debug=debug)
+        if not uri:
+            logging.error(f"Failed to convert URL to URI: {post_uri}")
+            return None
+        post_uri = uri
+        logging.info(f"Using URI: {post_uri}")
     
     # Create output directory if it doesn't exist
     media_dir = os.path.join(output_dir, "media")
@@ -135,13 +147,13 @@ def main():
     debug = True
     setup_logging(debug)
     
-    # Example post URI
-    post_uri = "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3lmjg3ridak2g"
+    # Example post URL (instead of URI)
+    post_url = "https://bsky.app/profile/atproto.com/post/3jwgckq72jp2d"
     
     # Process with indices
-    print(f"\nProcessing post: {post_uri}")
+    print(f"\nProcessing post: {post_url}")
     output_path = process_post(
-        post_uri=post_uri,
+        post_uri=post_url,
         get_root=True,
         format_str="[{index}] **{displayName}** (@{handle}):\n{text}\n\n",
         include_replies=True,

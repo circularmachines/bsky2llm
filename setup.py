@@ -18,7 +18,8 @@ setup(
     author="Your Name",
     author_email="your.email@example.com",
     url="https://github.com/yourusername/bsky2llm",
-    packages=find_packages(),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
