@@ -17,7 +17,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import cv2
 import numpy as np
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -294,7 +294,7 @@ def _extract_audio(video_path: str, output_dir: str) -> Optional[str]:
 
 def _transcribe_audio(audio_path: str, language: str = "en") -> Optional[Dict[str, Any]]:
     """
-    Transcribe audio using Azure OpenAI's Whisper API
+    Transcribe audio using Azure OpenAI's Whisper API or OpenAI Whisper API
     
     Args:
         audio_path: Path to the audio file
@@ -309,34 +309,58 @@ def _transcribe_audio(audio_path: str, language: str = "en") -> Optional[Dict[st
         # Load environment variables
         load_dotenv()
         
-        # Get Azure OpenAI credentials
+        # Get OpenAI API key first
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        openai_model = os.getenv("OPENAI_WHISPER_MODEL", "whisper-1")
+        
+        # Get Azure OpenAI credentials as fallback
         azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        api_key = os.getenv("AZURE_OPENAI_KEY")
+        azure_api_key = os.getenv("AZURE_OPENAI_KEY")
         deployment_name = os.getenv("WHISPER_DEPLOYMENT_NAME", "whisper")
         api_version = os.getenv("WHISPER_API_VERSION", "2024-06-01")
         
-        # Check if credentials are available
-        if not all([azure_endpoint, api_key, deployment_name]):
-            logger.error("Azure OpenAI credentials not found in environment variables")
-            return None
-        
-        # Initialize Azure client
-        client = AzureOpenAI(
-            api_key=api_key,
-            azure_endpoint=azure_endpoint,
-            api_version=api_version
-        )
-        
-        # Transcribe the audio
-        with open(audio_path, "rb") as audio_file:
-            logger.debug("Sending audio to Azure OpenAI for transcription")
-            response = client.audio.transcriptions.create(
-                file=audio_file,
-                model=deployment_name, 
-                language=language,
-                response_format="verbose_json",
-                timestamp_granularities=["segment", "word"]
+        # Try OpenAI client first if credentials are available
+        if openai_api_key:
+            logger.debug("Using OpenAI API for transcription")
+            
+            # Initialize OpenAI client
+            client = OpenAI(api_key=openai_api_key)
+            
+            # Transcribe audio with OpenAI Whisper
+            with open(audio_path, "rb") as audio_file:
+                logger.debug(f"Sending audio to OpenAI for transcription using model: {openai_model}")
+                response = client.audio.transcriptions.create(
+                    file=audio_file,
+                    model=openai_model,
+                    language=language,
+                    response_format="verbose_json",
+                    timestamp_granularities=["segment", "word"]
+                )
+                
+        # Fall back to Azure OpenAI if credentials are available
+        elif azure_endpoint and azure_api_key:
+            logger.debug("Using Azure OpenAI API for transcription")
+            
+            # Initialize Azure client
+            client = AzureOpenAI(
+                api_key=azure_api_key,
+                azure_endpoint=azure_endpoint,
+                api_version=api_version
             )
+            
+            # Transcribe with Azure OpenAI Whisper
+            with open(audio_path, "rb") as audio_file:
+                logger.debug(f"Sending audio to Azure OpenAI for transcription using deployment: {deployment_name}")
+                response = client.audio.transcriptions.create(
+                    file=audio_file,
+                    model=deployment_name,
+                    language=language,
+                    response_format="verbose_json",
+                    timestamp_granularities=["segment", "word"]
+                )
+        else:
+            logger.error("No OpenAI or Azure OpenAI credentials found in environment variables")
+            return None
         
         # Parse the response
         if not hasattr(response, "text"):

@@ -1,101 +1,94 @@
 # bsky2llm
 
-A Python module for converting Bluesky posts and threads into OpenAI-compatible message format.
+A Python module for analyzing Bluesky posts and threads using AI models.
 
 ## Overview
 
-This module provides a simple interface to fetch Bluesky posts/threads and convert them into the standard message format expected by OpenAI's API. It handles text content, images, and videos, with support for transcription.
+This module provides a simple interface to fetch Bluesky posts/threads, process their content, and analyze them using AI models. It handles text content, images, and videos, with support for transcription. The module transforms Bluesky data into an intermediate markdown format that is both human-readable and compatible with AI APIs.
+
+Using markdown as an intermediate format allows you to inspect the data with tools like Obsidian, VSCode, or any markdown viewer before it's sent to AI models. This transparency helps verify what content is being analyzed and provides a useful artifact for debugging or record-keeping.
+
 
 ## Installation
 
 ```bash
-# Clone the repository
+# Install from PyPI
+pip install bsky2llm
+
+# Or clone the repository and install locally
 git clone https://github.com/yourusername/bsky2llm.git
 cd bsky2llm
-
-# Install dependencies
 pip install -r requirements.txt
+```
 
-# Create and configure .env file with your credentials
-cp .env.example .env
+### Prerequisites
+
+- **ffmpeg**: Required for video processing (extracting frames and audio)
+- **Python 3.7+**
+
+### Environment Setup
+
+Create a `.env` file in your project directory with your AI API credentials. You can choose which provider to use by setting the appropriate environment variables:
+
+```
+# Azure OpenAI credentials
+AZURE_OPENAI_KEY=your_azure_openai_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT=your_deployment_name
+AZURE_OPENAI_API_VERSION=2023-08-01-preview
+
+WHISPER_DEPLOYMENT_NAME=your_whisper_deployment_name
+WHISPER_API_VERSION=2024-06-01
+
+# Or OpenAI credentials
+OPENAI_API_KEY=your_openai_key
+OPENAI_MODEL=gpt-4o
+OPENAI_WHISPER_MODEL=whisper-1
 ```
 
 ## Usage
 
-Basic usage example:
+### Simple Example
 
 ```python
-import bsky2llm
-import openai
+from bsky2llm import process_post
 
-# Step 1: Get structured messages from a Bluesky thread
-post_uri = "at://did:plc:abc123/post/xyz456"
-thread_json = bsky2llm.get_post_thread(post_uri)
-messages = bsky2llm.compose_ai_prompt(thread_json)
+# Process a Bluesky post with default settings and get AI response
+url = "https://bsky.app/profile/laagrrluv.bsky.social/post/3lmjcwvpivv2l"
+system_message = "You are a helpful assistant that analyzes Bluesky posts."
 
-# Step 2: Use those messages in an OpenAI API call
-response = bsky2llm.ai_api_call(
-    messages=messages,
-    structured_output=True  # Optional, for structured output
-)
-
+response = process_post(url, system_message=system_message)
 print(response)
 ```
 
-## Project Structure
+### Individual Components
 
+The module provides several individual functions that you can use separately:
+
+```python
+from bsky2llm.url_converter import convert_url_to_uri
+from bsky2llm.get_raw_thread import get_raw_thread
+from bsky2llm.markdown_creator import thread_to_markdown
+from bsky2llm.md_to_openai import parse_markdown
+from bsky2llm.ai_api_call import main_interface_function as call_ai_api
+
+# Convert a Bluesky URL to post URI
+post_url = "https://bsky.app/profile/atproto.com/post/3jwgckq72jp2d"
+post_uri = convert_url_to_uri(post_url)
+
+# Fetch the raw thread data
+thread_data = get_raw_thread(post_uri, get_root=True, include_replies=True)
+
+# Convert thread to markdown format
+markdown = thread_to_markdown(thread_data, include_indices=True)
+
+# Convert markdown to OpenAI message format
+messages = parse_markdown(markdown, system_message="You are a helpful assistant analyzing a Bluesky thread.")
+
+# Make an AI API call
+response = call_ai_api(messages, debug=True)
+print(response)
 ```
-bsky2llm/
-├── src/
-│   ├── __init__.py            # Package exports
-│   ├── get_post_thread.py     # Get thread data in JSON format
-│   ├── process_video.py       # Process video (download, frames, transcription)
-│   ├── compose_ai_prompt.py   # Convert thread JSON to OpenAI messages
-│   └── ai_api_call.py         # AzureOpenAI wrapper
-├── requirements.txt           # Dependencies
-└── README.md                  # This file
-```
-
-## Module Descriptions
-
-Each module in the `src/` directory performs a specific function:
-
-### get_post_thread.py
-- **Input**: Post URI
-- **Output**: Complete thread of post URI with relation structure, including users. JSON format with each post being one item. Includes URIs to videos and images and links. Neat structure for downstream processing.
-
-### compose_ai_prompt.py
-- **Input**: Thread JSON
-- **Output**: List of messages to be sent to AI
-
-### process_video.py
-Will be called from compose_ai_prompt when there's a video. Downloads, extracts audio, transcribes, extract video frames.
-- **Input**: Video URI
-- **Output**: Input for composing AI messages
-
-### ai_api_call.py
-Simple AzureOpenAI wrapper that supports structured output (optional).
-- **Input**: List of messages
-- **Output**: Structured AI output
-
-## Development
-
-Each source file follows a consistent structure for better maintainability:
-1. Imports
-2. Logging setup
-3. Helper functions
-4. Main interface function
-5. CLI test function
-
-When run directly, each module will execute with verbose debugging output.
-When imported, minimal logging is used.
-
-## Environment Variables
-
-Required environment variables (see .env.example):
-- AZURE_OPENAI_KEY
-- AZURE_OPENAI_ENDPOINT
-- AZURE_OPENAI_DEPLOYMENT
 
 ## License
 

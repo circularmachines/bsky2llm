@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
 Process module for bsky2llm.
-Orchestrates the execution of multiple scripts to process a Bluesky thread from URI to formatted markdown.
+Orchestrates the execution of multiple scripts to process a Bluesky thread from URI to formatted markdown,
+and optionally convert to OpenAI messages for AI API calls.
 """
 
 import os
 import logging
 import json
 import argparse
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List, Union, Tuple
 
 # Import the required modules
 try:
@@ -16,6 +17,8 @@ try:
     from .get_raw_thread import get_raw_thread
     from .markdown_creator import thread_to_markdown
     from .url_converter import convert_url_to_uri
+    from .md_to_openai import parse_markdown
+    from .ai_api_call import main_interface_function as call_ai_api
 except ImportError:
     # When run directly as a script
     import sys
@@ -23,6 +26,8 @@ except ImportError:
     from bsky2llm.get_raw_thread import get_raw_thread
     from bsky2llm.markdown_creator import thread_to_markdown
     from bsky2llm.url_converter import convert_url_to_uri
+    from bsky2llm.md_to_openai import parse_markdown
+    from bsky2llm.ai_api_call import main_interface_function as call_ai_api
 
 def setup_logging(debug=False):
     """Configure logging based on debug mode"""
@@ -43,10 +48,15 @@ def process_post(
     process_media: bool = True,
     output_dir: str = "output",
     output_filename: Optional[str] = None,
-    debug: bool = False
-) -> Optional[str]:
+    debug: bool = False,
+    # AI parameters
+    get_ai_response: bool = True,
+    system_message: str = "You are a helpful assistant. Analyze the following Bluesky thread and provide insights.",
+    output_messages_file: Optional[str] = None,
+    output_response_file: Optional[str] = None
+) -> Union[str, Tuple[str, Optional[str]]]:
     """
-    Process a Bluesky post from URI or URL to formatted markdown
+    Process a Bluesky post from URI or URL to formatted markdown and optionally get AI response
     
     Args:
         post_uri: The Bluesky post URI or URL to process
@@ -59,9 +69,16 @@ def process_post(
         output_dir: Directory to save extracted files and markdown
         output_filename: Custom filename for the output markdown file (without extension)
         debug: Enable verbose debug output
+        get_ai_response: If True, generate AI response from the markdown content
+        system_message: System message to use for AI if get_ai_response is True
+        output_messages_file: Custom filename for the OpenAI messages JSON file (without extension)
+        output_response_file: Custom filename for the AI response text file (without extension)
         
     Returns:
-        Path to the generated markdown file or None if processing failed
+        If get_ai_response is False:
+            Path to the generated markdown file or None if processing failed
+        If get_ai_response is True:
+            Tuple of (markdown_path, ai_response) or (markdown_path, None) if AI processing failed
     """
     setup_logging(debug)
     
@@ -128,7 +145,6 @@ def process_post(
     if output_filename:
         md_filename = f"{output_filename}.md"
     else:
-        #prefix = "indexed_" if include_indices else ""
         md_filename = f"thread_{post_id}.md"
     
     # Save markdown
@@ -137,10 +153,62 @@ def process_post(
         with open(md_path, 'w', encoding='utf-8') as f:
             f.write(markdown)
         logging.info(f"Markdown saved to: {md_path}")
-        return md_path
     except Exception as e:
         logging.error(f"Failed to save markdown: {e}")
         return None
+    
+    # If AI response is not requested, return the markdown path
+    if not get_ai_response:
+        return md_path
+    
+    # Step 3: Convert markdown to OpenAI messages (if AI response is requested)
+    logging.info(f"Converting markdown to OpenAI messages: {md_path}")
+    messages = parse_markdown(md_path, system_message)
+    
+    if not messages:
+        logging.error("Failed to convert markdown to OpenAI messages")
+        return md_path, None
+    
+    # Determine output messages filename
+    if output_messages_file:
+        messages_filename = f"{output_messages_file}.json"
+    else:
+        messages_filename = f"messages_{post_id}.json"
+    
+    # Save messages
+    messages_path = os.path.join(output_dir, messages_filename)
+    try:
+        with open(messages_path, 'w', encoding='utf-8') as f:
+            json.dump(messages, f, indent=4)
+        logging.info(f"OpenAI messages saved to: {messages_path}")
+    except Exception as e:
+        logging.error(f"Failed to save OpenAI messages: {e}")
+    
+    # Step 4: Call AI API
+    logging.info("Calling AI API")
+    response = call_ai_api(messages_path, debug=debug)
+    
+    if not response:
+        logging.error("Failed to get AI response")
+        return md_path, None
+    
+    # Determine output response filename
+    if output_response_file:
+        response_filename = f"{output_response_file}.txt"
+    else:
+        response_filename = f"response_{post_id}.txt"
+    
+    # Save response
+    response_path = os.path.join(output_dir, response_filename)
+    try:
+        with open(response_path, 'w', encoding='utf-8') as f:
+            f.write(response)
+        logging.info(f"AI response saved to: {response_path}")
+    except Exception as e:
+        logging.error(f"Failed to save AI response: {e}")
+    
+    # Return both the markdown path and the AI response
+    return response
 
 def main():
     """Main function with hardcoded example"""
@@ -150,9 +218,9 @@ def main():
     # Example post URL (instead of URI)
     post_url = "https://bsky.app/profile/atproto.com/post/3jwgckq72jp2d"
     
-    # Process with indices
+    # Process post with AI response
     print(f"\nProcessing post: {post_url}")
-    output_path = process_post(
+    result = process_post(
         post_uri=post_url,
         get_root=True,
         format_str="[{index}] **{displayName}** (@{handle}):\n{text}\n\n",
@@ -160,20 +228,41 @@ def main():
         include_indices=True,
         process_media=True,
         output_dir="output",
-        debug=True
+        debug=True,
+        get_ai_response=True,
+        system_message="You are a helpful assistant analyzing a Bluesky thread. Provide a concise summary and identify key points."
     )
     
-    if output_path:
-        print(f"\nProcessing complete! Output saved to: {output_path}")
-        
-        # Display a preview of the markdown
-        try:
-            with open(output_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                preview_length = min(300, len(content))
-                print(f"\nMarkdown preview:\n{content[:preview_length]}...")
-        except Exception as e:
-            print(f"\nCould not display preview: {e}")
+    if result:
+        if isinstance(result, tuple):
+            md_path, ai_response = result
+            print(f"\nProcessing complete! Markdown output saved to: {md_path}")
+            
+            # Display a preview of the markdown
+            try:
+                with open(md_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    preview_length = min(300, len(content))
+                    print(f"\nMarkdown preview:\n{content[:preview_length]}...")
+            except Exception as e:
+                print(f"\nCould not display preview: {e}")
+            
+            if ai_response:
+                print("\nAI Response:")
+                print(ai_response)
+            else:
+                print("\nAI processing failed")
+        else:
+            print(f"\nProcessing to markdown complete! Output saved to: {result}")
+            
+            # Display a preview of the markdown
+            try:
+                with open(result, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    preview_length = min(300, len(content))
+                    print(f"\nMarkdown preview:\n{content[:preview_length]}...")
+            except Exception as e:
+                print(f"\nCould not display preview: {e}")
     else:
         print("\nProcessing failed")
 
