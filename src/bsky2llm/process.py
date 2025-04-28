@@ -41,14 +41,15 @@ def setup_logging(debug=False):
 def process_post(
     post_uri: str, 
     get_root: bool = True,
-    format_str: str = "**{displayName}** (@{handle}):\n{text}\n\n",
+    format_str: str = "*[{index}]* **{displayName}** (@{handle}):\n{text}\n\n",
     include_replies: bool = True,
     max_depth: int = -1,
-    include_indices: bool = False,
+    include_indices: bool = True,
     process_media: bool = True,
     output_dir: str = "output",
     output_filename: Optional[str] = None,
     debug: bool = False,
+    max_posts: int = -1,
     # AI parameters
     get_ai_response: bool = True,
     system_message: str = "You are a helpful assistant. Analyze the following Bluesky thread and provide insights.",
@@ -69,6 +70,7 @@ def process_post(
         output_dir: Directory to save extracted files and markdown
         output_filename: Custom filename for the output markdown file (without extension)
         debug: Enable verbose debug output
+        max_posts: Maximum number of posts to include (-1 for unlimited)
         get_ai_response: If True, generate AI response from the markdown content
         system_message: System message to use for AI if get_ai_response is True
         output_messages_file: Custom filename for the OpenAI messages JSON file (without extension)
@@ -134,7 +136,8 @@ def process_post(
         include_indices=include_indices,
         process_media=process_media,
         output_dir=media_dir,
-        debug=debug
+        debug=debug,
+        max_posts=max_posts
     )
     
     if not markdown:

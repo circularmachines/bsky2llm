@@ -123,7 +123,9 @@ def _process_thread_node(
     process_media: bool = False,
     output_dir: str = "vault/media",
     current_index: List[int] = None,
-    debug: bool = False
+    debug: bool = False,
+    post_count: List[int] = None,
+    max_posts: int = -1
 ) -> List[str]:
     """
     Process a thread node recursively and format as markdown
@@ -140,6 +142,8 @@ def _process_thread_node(
         output_dir: Directory to save extracted files
         current_index: Current index path (e.g., [1, 2, 3])
         debug: Enable verbose debug output
+        post_count: Reference to a list containing the current post count [count]
+        max_posts: Maximum number of posts to include (-1 for unlimited)
         
     Returns:
         List of formatted post strings
@@ -152,6 +156,15 @@ def _process_thread_node(
     # Initialize index if not provided
     if current_index is None:
         current_index = [1]
+        
+    # Initialize post count if not provided
+    if post_count is None:
+        post_count = [0]
+        
+    # Check if we've reached the maximum number of posts
+    if max_posts > 0 and post_count[0] >= max_posts:
+        logging.debug(f"Reached maximum post count ({max_posts}), stopping thread processing")
+        return results
     
     # Get post object
     post_obj = node.get("post", {})
@@ -164,6 +177,9 @@ def _process_thread_node(
     # Apply filter if provided
     if filter_fn is not None and not filter_fn(post_data):
         return results
+    
+    # Increment post count
+    post_count[0] += 1
     
     # Add index information if requested
     if include_indices:
@@ -219,6 +235,11 @@ def _process_thread_node(
         replies = node.get("replies", [])
         if isinstance(replies, list):
             for i, reply in enumerate(replies):
+                # Check if we've reached the maximum number of posts
+                if max_posts > 0 and post_count[0] >= max_posts:
+                    logging.debug(f"Reached maximum post count ({max_posts}) during reply processing")
+                    break
+                    
                 # Create new index for this reply
                 reply_index = current_index.copy()
                 if len(reply_index) <= depth + 1:
@@ -240,7 +261,9 @@ def _process_thread_node(
                     process_media,
                     output_dir,
                     reply_index,
-                    debug
+                    debug,
+                    post_count,
+                    max_posts
                 )
                 results.extend(reply_results)
                 
@@ -255,7 +278,8 @@ def thread_to_markdown(
     include_indices: bool = False,
     process_media: bool = False,
     output_dir: str = "vault/media",
-    debug: bool = False
+    debug: bool = False,
+    max_posts: int = -1
 ) -> str:
     """
     Convert thread data to a markdown string with customizable formatting.
@@ -271,6 +295,7 @@ def thread_to_markdown(
         process_media (bool): Whether to process and include media content (videos, images)
         output_dir (str): Directory to save extracted files from media
         debug (bool): Enable verbose debug output
+        max_posts (int): Maximum number of posts to include (-1 for unlimited)
         
     Returns:
         str: Formatted markdown string
@@ -289,6 +314,7 @@ def thread_to_markdown(
     
     # Start processing from thread root
     thread_node = thread_data.get("thread", {})
+    post_count = [0]  # Using a list to allow modification by reference
     post_mds = _process_thread_node(
         thread_node,
         format_str,
@@ -300,13 +326,15 @@ def thread_to_markdown(
         process_media,
         output_dir,
         None,
-        debug
+        debug,
+        post_count,
+        max_posts
     )
     
     # Join all formatted posts into a single markdown string
     markdown = "".join(post_mds)
     
-    logging.debug(f"Generated {len(markdown)} characters of markdown")
+    logging.debug(f"Generated {len(markdown)} characters of markdown with {post_count[0]} posts")
     return markdown
 
 def main():
