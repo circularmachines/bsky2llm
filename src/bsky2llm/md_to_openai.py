@@ -172,8 +172,8 @@ def main_interface_function(md_file: str, system_message: str, output_file: str,
 
 def main():
     """Main function with hardcoded example"""
-    example_md_file = "output/thread_3lnjkwfzvw22q.md"
-    example_output_file = "output/messages.json"
+    example_md_file = "tests/markdown_example.md"
+    example_output_file = "tests/messages_example.json"
     system_message = "You are a helpful assistant. Analyze the following Bluesky thread and provide insights."
 
     success = main_interface_function(

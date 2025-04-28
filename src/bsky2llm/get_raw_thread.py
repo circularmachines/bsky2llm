@@ -134,7 +134,7 @@ def get_raw_thread(post_uri: str, get_root: bool = False, debug: bool = False) -
 def main():
     """Main function with hardcoded example"""
     # Example post URI
-    post_uri = "at://did:plc:evocjxmi5cps2thb4ya5jcji/app.bsky.feed.post/3ll5dz4mqmb2l"
+    post_uri = "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3l6oveex3ii2l"
     
     # Get the root thread data
     get_root = True

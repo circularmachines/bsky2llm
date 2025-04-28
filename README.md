@@ -21,6 +21,24 @@ cd bsky2llm
 pip install -r requirements.txt
 ```
 
+## Usage
+
+```python
+from bsky2llm import process_post
+
+url="https://bsky.app/profile/bsky.app/post/3l6oveex3ii2l"
+
+system_message="You are a helpful assistant that analyzes Bluesky posts. Write a short 300 character summary of the post and its comments."
+
+response = process_post(url, system_message=system_message, max_posts=50, max_depth=1)#, get_ai_response=True, include_indices=True)
+
+print(response)
+```
+
+```python
+Bluesky's update introduces its open social network, emphasizing creator independence, developer freedom, and user choice. Users report issues with feed visibility, server errors, and content moderation. Concerns about hate speech and discrimination are raised, with suggestions for features like audience limits and video sections. Some users express gratitude, while others highlight challenges in engagement and platform functionality.
+```
+
 ### Prerequisites
 
 - **ffmpeg**: Required for video processing (extracting frames and audio)
@@ -46,22 +64,7 @@ OPENAI_MODEL=gpt-4o
 OPENAI_WHISPER_MODEL=whisper-1
 ```
 
-## Usage
-
-### Simple Example
-
-```python
-from bsky2llm import process_post
-
-# Process a Bluesky post with default settings and get AI response
-url = "https://bsky.app/profile/laagrrluv.bsky.social/post/3lmjcwvpivv2l"
-system_message = "You are a helpful assistant that analyzes Bluesky posts."
-
-response = process_post(url, system_message=system_message)
-print(response)
-```
-
-### Individual Components
+## Individual Components
 
 The module provides several individual functions that you can use separately:
 

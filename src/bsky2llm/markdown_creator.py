@@ -340,7 +340,7 @@ def thread_to_markdown(
 def main():
     """Main function with hardcoded example"""
     # Example thread data file
-    input_file = "examples/raw_thread_3ll5dz4mqmb2l.json"
+    input_file = "tests/raw_thread_3l6oveex3ii2l.json"
 
     
     try:
@@ -350,51 +350,32 @@ def main():
             
         print(f"\nLoaded thread data from: {input_file}")
         
-        # Example custom formats with indices
-        formats = [
-            # Format 1: Basic with indices
-            "[{index}] **{displayName}** (@{handle}):\n{text}\n\n"
-        ]
+
         
-        # Generate markdown with each format
-        for i, format_str in enumerate(formats):
-            print(f"\nGenerating markdown with format {i+1} (with indices)...")
-            
-            markdown = thread_to_markdown(
-                thread_data,
-                format_str=format_str,
-                include_replies=True,
-                include_indices=True,
-                process_media=True,  # Enable media processing
-                debug=True
-            )
-            
-            # Save markdown to file
-            output_file = f"thread_indexed_format{i+1}.md"
-            with open(output_file, 'w', encoding='utf-8') as f:
-                f.write(markdown)
-            print(f"Markdown saved to: {output_file}")
-            
-            # Print a sample of the markdown
-            print("\nMarkdown sample:")
-            print(markdown[:300] + "..." if len(markdown) > 300 else markdown)
-            
-        # Also generate a non-indexed version for comparison
-        print("\nGenerating markdown without indices for comparison...")
         markdown = thread_to_markdown(
             thread_data,
-            format_str="**{displayName}** (@{handle}):\n{text}\n\n",
+            format_str="[{index}] **{displayName}** (@{handle}):\n{text}\n\n",
             include_replies=True,
-            include_indices=False,
+            include_indices=True,
             process_media=True,  # Enable media processing
-            debug=True
+            debug=True,
+            max_posts=50,
+            max_depth=1,
+            output_dir="tests/media"
         )
         
-        # Save markdown to file
-        output_file = "thread_no_indices.md"
+
+        # sve the markdown to a file
+        output_file = "tests/markdown_example.md"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(markdown)
-        print(f"Markdown saved to: {output_file}")
+        print(f"\nMarkdown saved to: {output_file}")
+        
+        # Print a sample of the markdown
+        print("\nMarkdown sample:")
+        print(markdown[:300] + "..." if len(markdown) > 300 else markdown)
+            
+
             
     except FileNotFoundError:
         print(f"\nError: Thread data file '{input_file}' not found.")

@@ -213,7 +213,7 @@ def main_interface_function(
 def main():
     """Main function with hardcoded example"""
     # Use hardcoded path to messages.json
-    example_input = "tests/messages.json"
+    example_input = "tests/messages_example.json"
     
     # Call the API and get response
     response = main_interface_function(
