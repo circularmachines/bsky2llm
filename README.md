@@ -12,13 +12,7 @@ Using markdown as an intermediate format allows you to inspect the data with too
 ## Installation
 
 ```bash
-# Install from PyPI
 pip install bsky2llm
-
-# Or clone the repository and install locally
-git clone https://github.com/yourusername/bsky2llm.git
-cd bsky2llm
-pip install -r requirements.txt
 ```
 
 ## Usage
@@ -36,7 +30,7 @@ response = process_post(url, system_message=system_message, max_posts=50, max_de
 print(response)
 ```
 
-```python
+```markdown
 Bluesky's update introduces its open social network, emphasizing creator independence, developer freedom, and user choice. Users report issues with feed visibility, server errors, and content moderation. Concerns about hate speech and discrimination are raised, with suggestions for features like audience limits and video sections. Some users express gratitude, while others highlight challenges in engagement and platform functionality.
 ```
 
