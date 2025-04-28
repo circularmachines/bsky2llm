@@ -39,8 +39,8 @@ setup(
     name="bsky2llm",
     version="0.1.0",
     description="A Python module for analyzing Bluesky posts and threads using AI models",
-    author="Johan",
-    author_email="your.email@example.com",  # Replace with your actual email
+    author="Johan Lagerlöf",
+    author_email="laagrrluv@gmail.com",  # Replace with your actual email
     url="https://github.com/circularmachines/bsky2llm",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
