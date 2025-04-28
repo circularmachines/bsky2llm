@@ -16,4 +16,4 @@ from .md_to_openai import parse_markdown
 from .ai_api_call import main_interface_function as call_ai_api
 
 # Set version
-__version__ = "0.1.1"
+__version__ = "0.1.0"
